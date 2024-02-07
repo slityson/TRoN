@@ -234,10 +234,10 @@ def generate_table(df):
 def update_table(df, from_node, to_nodes):
     url = df['url'].loc[df['roadmap']== from_node].item()
     st.text(url)
-    st.text(df.loc[df['roadmap']== from_node].shape)
+    st.text(df.loc[df['roadmap']== from_node].dtypes)
     df = df.loc[df['roadmap']!= from_node]
     st.text(len([from_node, to_nodes, True, url]))
-    df.loc[len(df.index)] = [from_node, to_nodes, True, url]
+    df.loc[len(df.index)] = [from_node, to_nodes, True, 'http']
     
     df.sort_values(by=['roadmap'])
     return df
