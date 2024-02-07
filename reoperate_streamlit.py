@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+import numpy as np
 import pandas as pd
 import requests
 from pathlib import Path
@@ -241,7 +242,8 @@ def update_table(df, from_node, to_nodes):
     df_new_row.reset_index(inplace=True)
     st.dataframe(df_new_row)
     #df = pd.concat([df, df_new_row])
-    df.loc[len(df.index)] = [from_node, to_nodes, True, url]
+    new_row_array = np.asarray([from_node, to_nodes, True, url],dtype='object')
+    df.loc[len(df.index)] = new_row_array
     st.dataframe(df)
     df.sort_values(by=['roadmap'])
     return df
