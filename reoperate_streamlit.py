@@ -235,16 +235,8 @@ def generate_table(df):
 def update_table(df, from_node, to_nodes):
     url = df['url'].loc[df['roadmap']== from_node].item()
     df = df.loc[df['roadmap']!= from_node]
-    
-    # df_new_row = pd.DataFrame({'roadmap':from_node, 'directed_to':to_nodes, 'display':True, 'url':url})
-    df_new_row = pd.DataFrame([from_node, to_nodes, True, url])
-    st.dataframe(df_new_row)
-    df_new_row.reset_index(inplace=True)
-    st.dataframe(df_new_row)
-    #df = pd.concat([df, df_new_row])
     new_row_array = np.asarray([from_node, to_nodes, True, url],dtype='object')
     df.loc[len(df.index)] = new_row_array
-    st.dataframe(df)
     df.sort_values(by=['roadmap'])
     return df
 
