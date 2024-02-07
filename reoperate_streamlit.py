@@ -261,7 +261,7 @@ def run_streamlit(graph_json_data_path,table_json_data_path):
       
     # Create Upload json button
     with st.sidebar:
-        df_uploaded_json = st.file_uploader('Upload Node json',type='json')
+        df_uploaded_json = st.file_uploader('Upload Roadmap Table File',type='json')
     if df_uploaded_json:
         st.session_state.df_table = import_json_as_df(df_uploaded_json,'directed_to')
         st.session_state.df_interact = update_digraph(st.session_state.df_table)
@@ -276,7 +276,7 @@ def run_streamlit(graph_json_data_path,table_json_data_path):
         # Implement multiselect dropdown menu for option selection (returns list)
         selected_nodes = st.multiselect('Select Roadmaps(s) to visualize', node_list)
         select_all = st.checkbox('Visualize All')
-        
+        st.markdown("""---""")
     new_directed_to_nodes = []
     with st.sidebar:
         
@@ -315,7 +315,7 @@ def run_streamlit(graph_json_data_path,table_json_data_path):
         with st.sidebar:
             st.download_button('Download Visualization As HTML',data=HtmlFile,file_name='roadmap_visualization.html')
     elif len(selected_nodes) == 0:
-        st.text('Please choose at least 1 Roadmap to get started')
+        st.text('Please choose at least 1 Roadmap on the left menu to visualize network')
         
     # Create network graph when user selects >= 1 item
     else:
