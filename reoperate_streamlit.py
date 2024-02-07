@@ -342,11 +342,13 @@ st.set_page_config(layout="wide")
 # depth = 1
 
 # get the path of your current script (main.py in here)
-# script_path = os.path.dirname(os.path.abspath(__file__))
+script_path = os.path.dirname(os.path.abspath(__file__))
 
 # add 'streamlit_app' folder to sys.path
-# app_folder = os.path.join(script_path, 'streamlit_app')
-# sys.path.append(app_folder)
+app_folder = os.path.join(script_path, 'data')
+sys.path.append(app_folder)
+app_folder = os.path.join(script_path, 'html')
+sys.path.append(app_folder)
 
 page_path = Path('./data/page_path.json')
 graph_json_data_path = Path('./data/digraph_pandas_dataframe.json')
