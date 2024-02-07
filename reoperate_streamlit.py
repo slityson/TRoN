@@ -239,8 +239,9 @@ def update_table(df, from_node, to_nodes):
     append_series = pd.Series([from_node, to_nodes, True, url])
     st.text(append_series)
     st.text(df.loc[len(df.index)-1])
-    df.loc[len(df.index)] = [from_node, to_nodes, True, url]
-    st.dataframe(df)
+    df_new_row = {'roadmap':from_node, 'directed_to':to_nodes, 'display':True, 'url':url]
+    st.dataframe(df_new_row)
+    df = pd.concat([df, df_new_row])
     df.sort_values(by=['roadmap'])
     return df
 
