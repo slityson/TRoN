@@ -300,7 +300,7 @@ def run_streamlit(graph_json_data_path,table_json_data_path):
         # Create networkx graph object from pandas dataframe
         G = nx.from_pandas_edgelist(st.session_state.df_select, 'source', 'target',create_using=nx.DiGraph())
         # Create pyvis network
-        HtmlFile = generate_pyvis_network(G,6s00)
+        HtmlFile = generate_pyvis_network(G,600)
         # Add button to download network as html
         with st.sidebar:
             st.download_button('Download Visualization As HTML',data=HtmlFile,file_name='roadmap_visualization.html')
