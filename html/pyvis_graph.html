@@ -1,0 +1,244 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 400px;
+                 background-color: white;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+             /* position absolute is important and the container has to be relative or absolute as well. */
+          div.popup {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 display:none;
+                 background-color:#f5f4ed;
+                 -moz-border-radius: 3px;
+                 -webkit-border-radius: 3px;
+                 border-radius: 3px;
+                 border: 1px solid #808074;
+                 box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+          }
+
+          /* hide the original tooltip */
+          .vis-tooltip {
+            display:none;
+          }
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "blue", "font": {"color": "white"}, "id": "Technology Roadmaps", "label": "Technology Roadmaps", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Technology_Roadmaps\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Mining the Martian Surface for in Situ Resources", "label": "Mining the Martian Surface for in Situ Resources", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Mining_the_Martian_Surface_for_in_Situ_Resources\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "PHA (polyhydroxyalkanoate) bioplastics manufacturing", "label": "PHA (polyhydroxyalkanoate) bioplastics manufacturing", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/PHA_(polyhydroxyalkanoate)_bioplastics_manufacturing\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Mining Critical Materials from Seawater and Brine", "label": "Mining Critical Materials from Seawater and Brine", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Mining_Critical_Materials_from_Seawater_and_Brine\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "In-Space Additive Manufacturing", "label": "In-Space Additive Manufacturing", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/In-Space_Additive_Manufacturing\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Direct Air Capture", "label": "Direct Air Capture", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Direct_Air_Capture\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Large Ultra Lightweight Monolithic Mirros for Space Missions", "label": "Large Ultra Lightweight Monolithic Mirros for Space Missions", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Large_Ultra_Lightweight_Monolithic_Mirros_for_Space_Missions\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Sustainable Aviation Fuel", "label": "Sustainable Aviation Fuel", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Sustainable_Aviation_Fuel\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Nuclear Fusion", "label": "Nuclear Fusion", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Nuclear_Fusion\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Carbon Dioxide Removal", "label": "Carbon Dioxide Removal", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Carbon_Dioxide_Removal\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Laser Confined Nuclear Fusion", "label": "Laser Confined Nuclear Fusion", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Laser_Confined_Nuclear_Fusion\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Wave Energy Conversion for Offshore AUV Docking Stations", "label": "Wave Energy Conversion for Offshore AUV Docking Stations", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Wave_Energy_Conversion_for_Offshore_AUV_Docking_Stations\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Wind Turbine - Energy Harvesting", "label": "Wind Turbine - Energy Harvesting", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Wind_Turbine_-_Energy_Harvesting\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Rocket Engines", "label": "Rocket Engines", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Rocket_Engines\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Electric Aircraft Propulsion Architectures", "label": "Electric Aircraft Propulsion Architectures", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Electric_Aircraft_Propulsion_Architectures\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Electric Heat Pumps", "label": "Electric Heat Pumps", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Electric_Heat_Pumps\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Earth Remote Sensing", "label": "Earth Remote Sensing", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Earth_Remote_Sensing\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Optical Payload for Space Situational Awareness in Geosynchronous Orbit", "label": "Optical Payload for Space Situational Awareness in Geosynchronous Orbit", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Optical_Payload_for_Space_Situational_Awareness_in_Geosynchronous_Orbit\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Sparse Apertures for Next Generation Optical Space Telescopes", "label": "Sparse Apertures for Next Generation Optical Space Telescopes", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Sparse_Apertures_for_Next_Generation_Optical_Space_Telescopes\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Smart 3D Cameras", "label": "Smart 3D Cameras", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Smart_3D_Cameras\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Soil Health Sensing System", "label": "Soil Health Sensing System", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Soil_Health_Sensing_System\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Radar For Autonomous Vehicles Mobile Robots", "label": "Radar For Autonomous Vehicles Mobile Robots", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Radar_For_Autonomous_Vehicles_Mobile_Robots\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Wearable Health Monitoring Devices", "label": "Wearable Health Monitoring Devices", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Wearable_Health_Monitoring_Devices\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Ground Based Radar For Space Situational Awareness", "label": "Ground Based Radar For Space Situational Awareness", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Ground_Based_Radar_For_Space_Situational_Awareness\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Inventory Management System", "label": "Inventory Management System", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Inventory_Management_System\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Plant Genetic Improvement", "label": "Plant Genetic Improvement", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Plant_Genetic_Improvement\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Wearable Health Fitness Watches", "label": "Wearable Health Fitness Watches", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Wearable_Health_Fitness_Watches\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Messenger RNA Vaccine", "label": "Messenger RNA Vaccine", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Messenger_RNA_Vaccine\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Lab Grown Meat", "label": "Lab Grown Meat", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Lab_Grown_Meat\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Small Launch Vehicles", "label": "Small Launch Vehicles", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Small_Launch_Vehicles\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Orbital Launch Vehicles Roadmap", "label": "Orbital Launch Vehicles Roadmap", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Orbital_Launch_Vehicles_Roadmap\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "On Orbit Refueling Repositioning", "label": "On Orbit Refueling Repositioning", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/On_Orbit_Refueling_Repositioning\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Hypersonic Transport Vehicles", "label": "Hypersonic Transport Vehicles", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Hypersonic_Transport_Vehicles\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Satellite Autonomous Systems", "label": "Satellite Autonomous Systems", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Satellite_Autonomous_Systems\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Battery Electric Vehicle Platforms", "label": "Battery Electric Vehicle Platforms", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Battery_Electric_Vehicle_Platforms\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Space electric propulsion", "label": "Space electric propulsion", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Space_electric_propulsion\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Electric Vehicle Charging Technologies", "label": "Electric Vehicle Charging Technologies", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Electric_Vehicle_Charging_Technologies\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Sample Technology Roadmap - Solar Electric Aircraft", "label": "Sample Technology Roadmap - Solar Electric Aircraft", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Sample_Technology_Roadmap_-_Solar_Electric_Aircraft\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Solar-Powered HALE Aircraft, by Naoki Kobayashi, Alex Kunycky, Yuya Makino", "label": "Solar-Powered HALE Aircraft, by Naoki Kobayashi, Alex Kunycky, Yuya Makino", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Solar-Powered_HALE_Aircraft,_by_Naoki_Kobayashi,_Alex_Kunycky,_Yuya_Makino\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Autonomous Underwater Vehicle for Offshore Oil and Gas Platform Inspection", "label": "Autonomous Underwater Vehicle for Offshore Oil and Gas Platform Inspection", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Autonomous_Underwater_Vehicle_for_Offshore_Oil_and_Gas_Platform_Inspection\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Satellite Data Communication", "label": "Satellite Data Communication", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Satellite_Data_Communication\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Satellite Lasercom", "label": "Satellite Lasercom", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Satellite_Lasercom\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "WorldWide eVTOL", "label": "WorldWide eVTOL", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/WorldWide_eVTOL\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "In Space Propellant Depot", "label": "In Space Propellant Depot", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/In_Space_Propellant_Depot\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Integrated and Co-located Pumped Hydro Reverse Osmosis Systems", "label": "Integrated and Co-located Pumped Hydro Reverse Osmosis Systems", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Integrated_and_Co-located_Pumped_Hydro_Reverse_Osmosis_Systems\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Energy Storage via Battery", "label": "Energy Storage via Battery", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Energy_Storage_via_Battery\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Random Forest in Data Analytics", "label": "Random Forest in Data Analytics", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Random_Forest_in_Data_Analytics\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Net Zero Energy Building", "label": "Net Zero Energy Building", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Net_Zero_Energy_Building\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Healthcare Data Security", "label": "Healthcare Data Security", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Healthcare_Data_Security\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Continuous Security Monitoring", "label": "Continuous Security Monitoring", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Continuous_Security_Monitoring\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "VREducation", "label": "VREducation", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/VREducation\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Online Reverse Procurement Marketplaces and Auctions", "label": "Online Reverse Procurement Marketplaces and Auctions", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Online_Reverse_Procurement_Marketplaces_and_Auctions\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Space Booms", "label": "Space Booms", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Space_Booms\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Ballistic Vests", "label": "Ballistic Vests", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Ballistic_Vests\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Building Automation Systems for Energy Management, by Kulkarni, Ozturk, Toeldte", "label": "Building Automation Systems for Energy Management, by Kulkarni, Ozturk, Toeldte", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Building_Automation_Systems_for_Energy_Management,_by_Kulkarni,_Ozturk,_Toeldte\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "High-Speed Rail Safety", "label": "High-Speed Rail Safety", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/High-Speed_Rail_Safety\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Recommendation Systems", "label": "Recommendation Systems", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Recommendation_Systems\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Autonomous System for Ground Transport", "label": "Autonomous System for Ground Transport", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Autonomous_System_for_Ground_Transport\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Mixed Reality (Augmented \u0026 Virtual)", "label": "Mixed Reality (Augmented \u0026 Virtual)", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Mixed_Reality_(Augmented_%26_Virtual)\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Remote Operated Processing Platform", "label": "Remote Operated Processing Platform", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Remote_Operated_Processing_Platform\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Computer-Aided Detection Leveraging Machine Learning and Augmented Reality", "label": "Computer-Aided Detection Leveraging Machine Learning and Augmented Reality", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Computer-Aided_Detection_Leveraging_Machine_Learning_and_Augmented_Reality\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Retail Payment system", "label": "Retail Payment system", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Retail_Payment_system\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Bioelectronic Devices for Electrical Stimulation", "label": "Bioelectronic Devices for Electrical Stimulation", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Bioelectronic_Devices_for_Electrical_Stimulation\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Large Ultra Lightweight Monolithic Mirrors for Space Missions", "label": "Large Ultra Lightweight Monolithic Mirrors for Space Missions", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Large_Ultra_Lightweight_Monolithic_Mirrors_for_Space_Missions\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Superconducting Cable", "label": "Superconducting Cable", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Superconducting_Cable\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Mobile Nuclear Fission Reactors", "label": "Mobile Nuclear Fission Reactors", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Mobile_Nuclear_Fission_Reactors\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Building Automation Systems for Energy Management", "label": "Building Automation Systems for Energy Management", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Building_Automation_Systems_for_Energy_Management\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Solar-Powered HALE Aircraft", "label": "Solar-Powered HALE Aircraft", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Solar-Powered_HALE_Aircraft\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Autonomy in the Corn Production System", "label": "Autonomy in the Corn Production System", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Autonomy_in_the_Corn_Production_System\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Blockchain As A Service For Supply Chain", "label": "Blockchain As A Service For Supply Chain", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Blockchain_As_A_Service_For_Supply_Chain\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Proton Exchange Membrane (PEM) Electrolyzer Plant at Grid Scale", "label": "Proton Exchange Membrane (PEM) Electrolyzer Plant at Grid Scale", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Proton_Exchange_Membrane_(PEM)_Electrolyzer_Plant_at_Grid_Scale#FOM_of_PEM_electrolyzer_plants\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Laser Powder Bed Fusion - Metal", "label": "Laser Powder Bed Fusion - Metal", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Laser_Powder_Bed_Fusion_-_Metal#List_of_R.26D_Projects\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Digital Twins in Supply Chain", "label": "Digital Twins in Supply Chain", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Digital_Twins_in_Supply_Chain\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Detect And Avoid Autonomous Augmentation System", "label": "Detect And Avoid Autonomous Augmentation System", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Detect_And_Avoid_Autonomous_Augmentation_System\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Quantum Computers for AI and ML", "label": "Quantum Computers for AI and ML", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Quantum_Computers_for_AI_and_ML\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Autonomous ElectricVTOL Transport Aircraft", "label": "Autonomous ElectricVTOL Transport Aircraft", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Autonomous_ElectricVTOL_Transport_Aircraft\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Main Page", "label": "Main Page", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Main_Page\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Introduction to ATRA", "label": "Introduction to ATRA", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php?title=Introduction_to_ATRA\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "The Book page", "label": "The Book page", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/The_Book_page\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "The Courses page", "label": "The Courses page", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/The_Courses_page\u0027\u003elink"}, {"color": "blue", "font": {"color": "white"}, "id": "Research", "label": "Research", "shape": "box", "size": 10, "title": "\u003ca href=\u0027https://roadmaps.mit.edu/index.php/Research\u0027\u003elink"}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "Technology Roadmaps", "to": "Mining the Martian Surface for in Situ Resources", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "PHA (polyhydroxyalkanoate) bioplastics manufacturing", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Mining Critical Materials from Seawater and Brine", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "In-Space Additive Manufacturing", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Direct Air Capture", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Large Ultra Lightweight Monolithic Mirros for Space Missions", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Sustainable Aviation Fuel", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Nuclear Fusion", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Carbon Dioxide Removal", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Laser Confined Nuclear Fusion", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Wave Energy Conversion for Offshore AUV Docking Stations", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Wind Turbine - Energy Harvesting", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Rocket Engines", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Electric Aircraft Propulsion Architectures", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Electric Heat Pumps", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Earth Remote Sensing", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Optical Payload for Space Situational Awareness in Geosynchronous Orbit", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Sparse Apertures for Next Generation Optical Space Telescopes", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Smart 3D Cameras", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Soil Health Sensing System", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Radar For Autonomous Vehicles Mobile Robots", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Wearable Health Monitoring Devices", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Ground Based Radar For Space Situational Awareness", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Inventory Management System", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Plant Genetic Improvement", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Wearable Health Fitness Watches", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Messenger RNA Vaccine", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Lab Grown Meat", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Small Launch Vehicles", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Orbital Launch Vehicles Roadmap", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "On Orbit Refueling Repositioning", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Hypersonic Transport Vehicles", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Satellite Autonomous Systems", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Battery Electric Vehicle Platforms", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Space electric propulsion", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Electric Vehicle Charging Technologies", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Sample Technology Roadmap - Solar Electric Aircraft", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Solar-Powered HALE Aircraft, by Naoki Kobayashi, Alex Kunycky, Yuya Makino", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Autonomous Underwater Vehicle for Offshore Oil and Gas Platform Inspection", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Satellite Data Communication", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Satellite Lasercom", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "WorldWide eVTOL", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "In Space Propellant Depot", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Integrated and Co-located Pumped Hydro Reverse Osmosis Systems", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Energy Storage via Battery", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Random Forest in Data Analytics", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Net Zero Energy Building", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Healthcare Data Security", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Continuous Security Monitoring", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "VREducation", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Online Reverse Procurement Marketplaces and Auctions", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Space Booms", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Ballistic Vests", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Building Automation Systems for Energy Management, by Kulkarni, Ozturk, Toeldte", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "High-Speed Rail Safety", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Recommendation Systems", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Autonomous System for Ground Transport", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Mixed Reality (Augmented \u0026 Virtual)", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Remote Operated Processing Platform", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Computer-Aided Detection Leveraging Machine Learning and Augmented Reality", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Retail Payment system", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Bioelectronic Devices for Electrical Stimulation", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Large Ultra Lightweight Monolithic Mirrors for Space Missions", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Superconducting Cable", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Mobile Nuclear Fission Reactors", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Building Automation Systems for Energy Management", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Solar-Powered HALE Aircraft", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Autonomy in the Corn Production System", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Blockchain As A Service For Supply Chain", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Proton Exchange Membrane (PEM) Electrolyzer Plant at Grid Scale", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Laser Powder Bed Fusion - Metal", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Digital Twins in Supply Chain", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Detect And Avoid Autonomous Augmentation System", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Quantum Computers for AI and ML", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Autonomous ElectricVTOL Transport Aircraft", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Main Page", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Introduction to ATRA", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "The Book page", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "The Courses page", "width": 1}, {"arrows": "to", "from": "Technology Roadmaps", "to": "Research", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "repulsion": {
+            "centralGravity": 0.33,
+            "damping": 0.95,
+            "nodeDistance": 420,
+            "springConstant": 0.1,
+            "springLength": 110
+        },
+        "solver": "repulsion",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+                  // make a custom popup
+                      var popup = document.createElement("div");
+                      popup.className = 'popup';
+                      popupTimeout = null;
+                      popup.addEventListener('mouseover', function () {
+                          console.log(popup)
+                          if (popupTimeout !== null) {
+                              clearTimeout(popupTimeout);
+                              popupTimeout = null;
+                          }
+                      });
+                      popup.addEventListener('mouseout', function () {
+                          if (popupTimeout === null) {
+                              hidePopup();
+                          }
+                      });
+                      container.appendChild(popup);
+
+
+                      // use the popup event to show
+                      network.on("showPopup", function (params) {
+                          showPopup(params);
+                      });
+
+                      // use the hide event to hide it
+                      network.on("hidePopup", function (params) {
+                          hidePopup();
+                      });
+
+                      // hiding the popup through css
+                      function hidePopup() {
+                          popupTimeout = setTimeout(function () { popup.style.display = 'none'; }, 500);
+                      }
+
+                      // showing the popup
+                      function showPopup(nodeId) {
+                          // get the data from the vis.DataSet
+                          var nodeData = nodes.get([nodeId]);
+                          popup.innerHTML = nodeData[0].title;
+
+                          // get the position of the node
+                          var posCanvas = network.getPositions([nodeId])[nodeId];
+
+                          // get the bounding box of the node
+                          var boundingBox = network.getBoundingBox(nodeId);
+
+                          //position tooltip:
+                          posCanvas.x = posCanvas.x + 0.5 * (boundingBox.right - boundingBox.left);
+
+                          // convert coordinates to the DOM space
+                          var posDOM = network.canvasToDOM(posCanvas);
+
+                          // Give it an offset
+                          posDOM.x += 10;
+                          posDOM.y -= 20;
+
+                          // show and place the tooltip.
+                          popup.style.display = 'block';
+                          popup.style.top = posDOM.y + 'px';
+                          popup.style.left = posDOM.x + 'px';
+                      }
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
