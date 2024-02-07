@@ -233,14 +233,11 @@ def generate_table(df):
 
 def update_table(df, from_node, to_nodes):
     url = df['url'].loc[df['roadmap']== from_node].item()
-    
     df = df.loc[df['roadmap']!= from_node]
-    st.text([from_node, to_nodes, True, 'http'])
-    append_series = pd.Series([from_node, to_nodes, True, url])
-    st.text(append_series)
-    st.text(df.loc[len(df.index)-1])
+    
     df_new_row = {'roadmap':from_node, 'directed_to':to_nodes, 'display':True, 'url':url]
     st.dataframe(df_new_row)
+    
     df = pd.concat([df, df_new_row])
     df.sort_values(by=['roadmap'])
     return df
