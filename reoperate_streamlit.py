@@ -239,7 +239,7 @@ def update_table(df, from_node, to_nodes):
     df_append = pd.DataFrame({'roadmap':from_node, 'directed_to':to_nodes, 'display':True,'url':url}) 
     st.text(df_append)
     # df.loc[len(df.index)] = {from_node, to_nodes, True, 'http']
-    df = pd.concat([df df_append])
+    df = pd.concat([df, df_append])
     df.sort_values(by=['roadmap'])
     return df
 
