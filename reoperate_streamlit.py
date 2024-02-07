@@ -235,7 +235,7 @@ def update_table(df, from_node, to_nodes):
     url = df['url'].loc[df['roadmap']== from_node].item()
     df = df.loc[df['roadmap']!= from_node]
     
-    df_new_row = {'roadmap':from_node, 'directed_to':to_nodes, 'display':True, 'url':url}
+    df_new_row = {'roadmap':from_node, 'directed_to':[to_nodes], 'display':True, 'url':url}
     st.dataframe(df_new_row)
     
     df = pd.concat([df, df_new_row])
