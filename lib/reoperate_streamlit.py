@@ -6,13 +6,14 @@ import networkx as nx
 import streamlit as st
 import streamlit.components.v1 as components
 from pyvis.network import Network
-import json
 
-import nltk
-from nltk.tokenize import word_tokenize
-from nltk.corpus import stopwords
-from nltk.stem import PorterStemmer
-from nltk.probability import FreqDist
+# Future libraries
+# import json
+# import nltk
+# from nltk.tokenize import word_tokenize
+# from nltk.corpus import stopwords
+# from nltk.stem import PorterStemmer
+# from nltk.probability import FreqDist
 #%% Parse Websites
 
 # Recursively go through website
