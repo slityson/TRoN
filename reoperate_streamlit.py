@@ -315,17 +315,14 @@ def run_streamlit(graph_json_data_path,table_json_data_path):
         with st.sidebar:
             st.download_button('Download Visualization As HTML',data=HtmlFile,file_name='roadmap_visualization.html')
     elif len(selected_nodes) == 0:
-        st.text('Please choose at least 1 Roadmap on the left menu to visualize network')
-        
+        st.text('Please choose at least 1 Roadmap on the left menu to visualize network')    
     # Create network graph when user selects >= 1 item
     else:
         # Code for filtering dataframe and generating network
         st.session_state.df_select = st.session_state.df_interact.loc[st.session_state.df_interact['source'].isin(selected_nodes) | st.session_state.df_interact['target'].isin(selected_nodes)]
         # st.session_state.df_select = st.session_state.df_select.reset_index(drop=True)
         # Create networkx graph object from pandas dataframe
-        G = nx.from_pandas_edgelist(st.session_state.df_select, 'source', 'target')
-        G = nx.DiGraph()
-        st.dataframe(st.session_state.df_select)
+        G = nx.from_pandas_edgelist(st.session_state.df_select, 'source', 'target',create_using=nx.DiGraph())
         # Create pyvis network
         HtmlFile = generate_pyvis_network(G,400)
         # Add button to download network as html
