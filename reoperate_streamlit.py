@@ -285,8 +285,9 @@ def run_streamlit(graph_json_data_path,table_json_data_path):
             current_connections = st.session_state.df_table['directed_to'].loc[st.session_state.df_table['roadmap']== select_edit_node].tolist()
             current_connections = current_connections[0][:]
             current_connections.sort()
-            st.text(set(node_list).difference(set(current_connections)))
-            st.text(set(current_connections).difference(set(node_list)))
+            
+            filter_list = set(current_connections).difference(set(node_list)) # Which options are not located in node_list, used to catch errors
+            current_connections = list(set(current_connections).difference(filter_list))
             new_directed_to_nodes = st.multiselect('Select Which Roadmaps to Direct To',options=node_list, default=current_connections)
             update_table_requested = st.button('Update Table')
             
