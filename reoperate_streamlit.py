@@ -241,7 +241,7 @@ def update_table(df, from_node, to_nodes):
     df_new_row.reset_index(inplace=True)
     st.dataframe(df_new_row)
     #df = pd.concat([df, df_new_row])
-    df.iloc[len(df.index)] = [from_node, to_nodes, True, url]
+    df.loc[len(df.index)] = [from_node, to_nodes, True, url]
     st.dataframe(df)
     df.sort_values(by=['roadmap'])
     return df
