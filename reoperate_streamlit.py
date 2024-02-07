@@ -194,7 +194,8 @@ def generate_pyvis_network(G, height_px):
         url_path = ''.join(url_path)
         st.text(f"<a href='{url_path}' target='_blank; rel='noopener noreferrer'>link</a>")
         #anode['title'] = f"<a href='{url_path}' target='_blank; rel='noopener noreferrer'>link</a>"
-        anode['title'] = f"<a href='{url_path}' target='_blank; rel='noopener noreferrer'>link"
+        anode['title'] = f"<a href='{url_path}' target='_blank; rel='noopener noreferrer'>link</a>"
+        anode['label'] = f"<a href='{url_path}' target='_blank; rel='noopener noreferrer'>link</a>"
         # st.text(url_path)
     
     # Genereate network with specific layout settings
