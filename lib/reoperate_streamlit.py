@@ -6,6 +6,8 @@ import networkx as nx
 import streamlit as st
 import streamlit.components.v1 as components
 from pyvis.network import Network
+import os
+import sys
 
 # Future libraries
 # import json
@@ -207,7 +209,7 @@ def generate_pyvis_network(G, height_px):
     
     # Save and read graph as HTML file (locally)
     except:
-        path = '../html'
+        path = './html'
         node_net.save_graph(f'{path}/pyvis_graph.html')
         HtmlFile = open(f'{path}/pyvis_graph.html','r',encoding='utf-8')
      
@@ -339,9 +341,16 @@ st.set_page_config(layout="wide")
 # base_url = "https://roadmaps.mit.edu/index.php/Technology_Roadmaps"
 # depth = 1
 
-page_path = Path('../data/page_path.json')
-graph_json_data_path = Path('../data/digraph_pandas_dataframe.json')
-table_json_data_path = Path('../data/table_pandas_dataframe.json')
+# get the path of your current script (main.py in here)
+script_path = os.path.dirname(os.path.abspath(__file__))
+
+# add 'streamlit_app' folder to sys.path
+app_folder = os.path.join(script_path, 'streamlit_app')
+sys.path.append(app_folder)
+
+page_path = Path('./data/page_path.json')
+graph_json_data_path = Path('./data/digraph_pandas_dataframe.json')
+table_json_data_path = Path('./data/table_pandas_dataframe.json')
 
 # df = build_dataframe(base_url,depth)
 # export_dataframe(df,page_path)
