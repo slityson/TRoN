@@ -3,4 +3,4 @@ pandas==1.5.3
 pathlib
 networkx==2.8.4
 pyvis==0.3.2
-numpy==1.21.2
+numpy
