@@ -227,7 +227,8 @@ def generate_table(df):
                                'directed_to':st.column_config.ListColumn(label='Directed To', width='large'),
                                'display':None,
                                'url':None},
-                use_container_width=True)
+                use_container_width=True,
+                height=1600)
 
 def update_table(df, from_node, to_nodes):
     url = df['url'].loc[df['roadmap']== from_node].item()
