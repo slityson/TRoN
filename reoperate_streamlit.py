@@ -237,7 +237,7 @@ def update_table(df, from_node, to_nodes):
     # st.text(df.loc[df['roadmap']== from_node].dtypes)
     df = df.loc[df['roadmap']!= from_node]
     st.text([from_node, to_nodes, True, 'http'])
-    df.loc[len(df.index)] = [from_node, to_nodes, True, 'http']
+    df.loc[len(df.index)] =df.loc[len(df.index)-1]
     df.sort_values(by=['roadmap'])
     return df
 
