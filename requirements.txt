@@ -1,5 +1,5 @@
 bs4
-pandas
+pandas==1.5.3
 pathlib
-networkx
-pyvis
+networkx==2.8.4
+pyvis==0.3.2
