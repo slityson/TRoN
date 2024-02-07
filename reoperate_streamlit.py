@@ -276,30 +276,6 @@ def run_streamlit(graph_json_data_path,table_json_data_path):
         # Implement multiselect dropdown menu for option selection (returns list)
         selected_nodes = st.multiselect('Select Roadmaps(s) to visualize', node_list)
         select_all = st.checkbox('Visualize All')
-        st.markdown("""---""")
-    new_directed_to_nodes = []
-    with st.sidebar:
-        
-        select_edit_node = st.selectbox('Select Roadmap to Edit',node_list, index=None)
-        if select_edit_node:
-            current_connections = st.session_state.df_table['directed_to'].loc[st.session_state.df_table['roadmap']== select_edit_node].tolist()
-            current_connections = current_connections[0][:]
-            current_connections.sort()
-            
-            filter_list = set(current_connections).difference(set(node_list)) # Which options are not located in node_list, used to catch errors
-            current_connections = list(set(current_connections).difference(filter_list))
-            new_directed_to_nodes = st.multiselect('Select Which Roadmaps to Direct To',options=node_list, default=current_connections)
-            update_table_requested = st.button('Update Table')
-            
-            if update_table_requested:
-                st.session_state.df_table = update_table(st.session_state.df_table, select_edit_node, new_directed_to_nodes)
-                st.session_state.df_interact = update_digraph(st.session_state.df_table)
-    
-    with st.sidebar:
-        # Add a button to download new table
-        new_table_data = convert_df_to_json(st.session_state.df_table)
-        st.download_button('Download Table As JSON',data=new_table_data,file_name='roadmap_connection_table.json')
-        
     
     # Flow Control
     # Set info message on initial site load
@@ -328,6 +304,32 @@ def run_streamlit(graph_json_data_path,table_json_data_path):
         # Add button to download network as html
         with st.sidebar:
             st.download_button('Download Visualization As HTML',data=HtmlFile,file_name='roadmap_visualization.html')
+    
+    new_directed_to_nodes = []
+    with st.sidebar:
+        st.markdown("""---""")
+        select_edit_node = st.selectbox('Select Roadmap to Edit',node_list, index=None)
+        if select_edit_node:
+            current_connections = st.session_state.df_table['directed_to'].loc[st.session_state.df_table['roadmap']== select_edit_node].tolist()
+            current_connections = current_connections[0][:]
+            current_connections.sort()
+            
+            filter_list = set(current_connections).difference(set(node_list)) # Which options are not located in node_list, used to catch errors
+            current_connections = list(set(current_connections).difference(filter_list))
+            new_directed_to_nodes = st.multiselect('Select Which Roadmaps to Direct To',options=node_list, default=current_connections)
+            update_table_requested = st.button('Update Table')
+            
+            if update_table_requested:
+                st.session_state.df_table = update_table(st.session_state.df_table, select_edit_node, new_directed_to_nodes)
+                st.session_state.df_interact = update_digraph(st.session_state.df_table)
+    
+    with st.sidebar:
+        # Add a button to download new table
+        new_table_data = convert_df_to_json(st.session_state.df_table)
+        st.download_button('Download Table As JSON',data=new_table_data,file_name='roadmap_connection_table.json')
+        
+    
+    
         
     # Create table
     generate_table(st.session_state.df_table)
