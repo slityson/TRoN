@@ -237,7 +237,8 @@ def update_table(df, from_node, to_nodes):
     
     df_new_row = pd.DataFrame({'roadmap':from_node, 'directed_to':to_nodes, 'display':True, 'url':url})
     st.dataframe(df_new_row)
-    
+    df_new_row.reset_index(inplace=True)
+    st.dataframe(df_new_row)
     df = pd.concat([df, df_new_row])
     df.sort_values(by=['roadmap'])
     return df
