@@ -250,10 +250,11 @@ def convert_df_to_json(df):
 def run_streamlit(graph_json_data_path,table_json_data_path):
     
     # Read datasets
-    if 'df_interact' not in st.session_state:
-        st.session_state.df_interact = pd.read_json(graph_json_data_path)
+    # if 'df_interact' not in st.session_state:
+        # st.session_state.df_interact = pd.read_json(graph_json_data_path)
     if 'df_table' not in st.session_state:
         st.session_state.df_table = pd.read_json(table_json_data_path)
+        st.session_state.df_interact = update_digraph(st.session_state.df_table)
     
     # Set Header Title
     st.title('Network Graph Visualization of Technology Roadmaps Interactions')
@@ -319,10 +320,8 @@ def run_streamlit(graph_json_data_path,table_json_data_path):
         st.session_state.df_select = st.session_state.df_interact.loc[st.session_state.df_interact['source'].isin(selected_nodes) | st.session_state.df_interact['target'].isin(selected_nodes)]
         # st.session_state.df_select = st.session_state.df_select.reset_index(drop=True)
         # Create networkx graph object from pandas dataframe
-        #G = nx.from_pandas_edgelist(st.session_state.df_select, 'source', 'target')
+        G = nx.from_pandas_edgelist(st.session_state.df_select, 'source', 'target')
         G = nx.DiGraph()
-        for page in st.session_state.df_select.itertuples():
-            G.add_edge(page.source,page.target)       
         st.dataframe(st.session_state.df_select)
         # Create pyvis network
         HtmlFile = generate_pyvis_network(G,400)
