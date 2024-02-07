@@ -321,7 +321,7 @@ def run_streamlit(graph_json_data_path,table_json_data_path):
         # Create networkx graph object from pandas dataframe
         #G = nx.from_pandas_edgelist(st.session_state.df_select, 'source', 'target')
         G = nx.DiGraph()
-        for page in df.itertuples():
+        for page in st.session_state.df_select.itertuples():
             G.add_edge(page.source,page.target)       
         st.dataframe(st.session_state.df_select)
         # Create pyvis network
