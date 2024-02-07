@@ -182,7 +182,7 @@ def generate_pyvis_network(G, height_px):
                        directed=True)
     # Take Networkx graph and translate it to a PyVis graph format
     node_net.from_nx(G)
-    
+    node_net.set_edge_smooth('dynamic')
     for anode in node_net.nodes:
         anode['shape'] = 'box'
         anode['color'] = 'blue'
