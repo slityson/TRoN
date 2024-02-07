@@ -258,7 +258,7 @@ def run_streamlit(graph_json_data_path,table_json_data_path):
         st.session_state.df_interact = update_digraph(st.session_state.df_table)
     
     # Set Header Title
-    st.title('Network Graph Visualization of Technology Roadmaps Interactions')
+    st.title('The Technology Roadmap Network')
       
     # Create Upload json button
     with st.sidebar:
