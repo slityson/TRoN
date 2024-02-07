@@ -232,8 +232,9 @@ def generate_table(df):
                 use_container_width=True)
 
 def update_table(df, from_node, to_nodes):
+    url = df['url'].loc[df['roadmap']== from_node]
     df = df.loc[df['roadmap']!= from_node]
-    df.loc[len(df.index)] = [from_node, to_nodes, True]
+    df.loc[len(df.index)] = [from_node, to_nodes, True, url]
     df.sort_values(by=['roadmap'])
     return df
 
