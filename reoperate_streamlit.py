@@ -186,17 +186,9 @@ def generate_pyvis_network(G, height_px):
     for anode in node_net.nodes:
         anode['shape'] = 'box'
         anode['color'] = 'blue'
-        
-        # st.text(anode['label'])
-        # st.text(st.session_state.df_table['url'].loc[st.session_state.df_table['roadmap']==anode['label']])
-        st.text(st.session_state.df_table['url'].loc[st.session_state.df_table['roadmap']==anode['label']].tolist())
         url_path = st.session_state.df_table['url'].loc[st.session_state.df_table['roadmap']==anode['label']].tolist()
         url_path = ''.join(url_path)
-        st.text(f"<a href='{url_path}' target='_blank; rel='noopener noreferrer'>link</a>")
-        #anode['title'] = f"<a href='{url_path}' target='_blank; rel='noopener noreferrer'>link</a>"
-        anode['title'] = f"<a href='{url_path}' target='_blank; rel='noopener noreferrer'>link</a>"
-        anode['label'] = f"<a href='{url_path}' target='_blank; rel='noopener noreferrer'>link</a>"
-        # st.text(url_path)
+        anode['title'] = f"<a href='{url_path}' target='_blank; rel='noopener noreferrer'>{anode['label']}</a>"
     
     # Genereate network with specific layout settings
     node_net.repulsion(node_distance=420, central_gravity=0.33,
