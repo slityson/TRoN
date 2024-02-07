@@ -304,7 +304,7 @@ def run_streamlit(graph_json_data_path,table_json_data_path):
         st.session_state.df_select = st.session_state.df_interact
         st.session_state.df_select = st.session_state.df_select.reset_index(drop=True)
         # Create networkx graph object from pandas dataframe
-        G = nx.from_pandas_edgelist(st.session_state.df_select, 'source', 'target')
+        G = nx.from_pandas_edgelist(st.session_state.df_select, 'source', 'target',create_using=nx.MultiGraph())
         # Create pyvis network
         HtmlFile = generate_pyvis_network(G,400)
         # Add button to download network as html
