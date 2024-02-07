@@ -317,9 +317,10 @@ def run_streamlit(graph_json_data_path,table_json_data_path):
     else:
         # Code for filtering dataframe and generating network
         st.session_state.df_select = st.session_state.df_interact.loc[st.session_state.df_interact['source'].isin(selected_nodes) | st.session_state.df_interact['target'].isin(selected_nodes)]
-        st.session_state.df_select = st.session_state.df_select.reset_index(drop=True)
+        # st.session_state.df_select = st.session_state.df_select.reset_index(drop=True)
         # Create networkx graph object from pandas dataframe
         G = nx.from_pandas_edgelist(st.session_state.df_select, 'source', 'target')
+        st.dataframe(st.session_state.df_interact)
         # Create pyvis network
         HtmlFile = generate_pyvis_network(G,400)
         # Add button to download network as html
