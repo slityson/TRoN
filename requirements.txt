@@ -1,0 +1,7 @@
+bs4
+pandas
+pathlib
+networkx
+pyvis
+os
+sys
