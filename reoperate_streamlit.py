@@ -189,7 +189,7 @@ def generate_pyvis_network(G, height_px):
         # st.text(anode['label'])
         # st.text(st.session_state.df_table['url'].loc[st.session_state.df_table['roadmap']==anode['label']])
         url_path = str(st.session_state.df_table['url'].loc[st.session_state.df_table['roadmap']==anode['label']].item())
-        anode['title'] = f"<a href='{url_path}'>link"
+        anode['title'] = f"<a href='{url_path}' target='_blank; rel='noopener noreferrer'>link</a>"
         # st.text(url_path)
     
     # Genereate network with specific layout settings
