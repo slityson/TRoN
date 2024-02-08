@@ -212,7 +212,7 @@ def generate_pyvis_network(G, height_px):
         HtmlFile = open(f'{path}/pyvis_graph.html','r',encoding='utf-8')
      
     # Load HTML file in HTML component for display on Streamlit page
-    components.html(HtmlFile.read(), height=height_px)
+    components.html(HtmlFile.read(), height=800)
     with open(f'{path}/pyvis_graph.html') as f:
         htmltext = f.read()
     return htmltext
@@ -228,7 +228,7 @@ def generate_table(df):
                                'display':None,
                                'url':None},
                 use_container_width=True,
-                height=1600)
+                height=800)
 
 def update_table(df, from_node, to_nodes):
     url = df['url'].loc[df['roadmap']== from_node].item()
