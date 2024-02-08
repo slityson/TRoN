@@ -176,7 +176,7 @@ def update_digraph(df):
 
 def generate_pyvis_network(G, height_px):
     # Initiate PyVis network object
-    node_net = Network(height=f'{height_px}px', 
+    node_net = Network(height='800px', 
                        bgcolor='white',
                        font_color='white', 
                        directed=True)
