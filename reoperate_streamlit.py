@@ -226,7 +226,7 @@ def generate_pyvis_network():
 def generate_table(df):
     # df['directed_to'] = df['directed_to'].apply(lambda x: ',\n'.join(x))
     df = df.sort_values(by=['roadmap'])
-    with st.session_state:
+    with st.session_state.table_container:
         st.dataframe(df,hide_index=True,
                     column_config={'roadmap':'Roadmap',
                                 'directed_to':st.column_config.ListColumn(label='Directed To', width='large'),
