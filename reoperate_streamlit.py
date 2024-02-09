@@ -174,7 +174,9 @@ def update_digraph(df):
 
 # Create pyvis network and display
 
-def generate_pyvis_network(G, height_px):
+def generate_pyvis_network():
+    # Create network
+    G = nx.from_pandas_edgelist(st.session_state.df_select, 'source', 'target',create_using=nx.DiGraph())
     # Initiate PyVis network object
     node_net = Network(height='800px', 
                        bgcolor='white',
@@ -212,7 +214,9 @@ def generate_pyvis_network(G, height_px):
         HtmlFile = open(f'{path}/pyvis_graph.html','r',encoding='utf-8')
      
     # Load HTML file in HTML component for display on Streamlit page
-    components.html(HtmlFile.read(), height=800)
+    with st.session_state.graph_container:
+        components.html(HtmlFile.read(), height=800)
+    
     with open(f'{path}/pyvis_graph.html') as f:
         htmltext = f.read()
     return htmltext
@@ -222,13 +226,14 @@ def generate_pyvis_network(G, height_px):
 def generate_table(df):
     # df['directed_to'] = df['directed_to'].apply(lambda x: ',\n'.join(x))
     df = df.sort_values(by=['roadmap'])
-    st.dataframe(df,hide_index=True,
-                column_config={'roadmap':'Roadmap',
-                               'directed_to':st.column_config.ListColumn(label='Directed To', width='large'),
-                               'display':None,
-                               'url':None},
-                use_container_width=True,
-                height=800)
+    with st.session_state:
+        st.dataframe(df,hide_index=True,
+                    column_config={'roadmap':'Roadmap',
+                                'directed_to':st.column_config.ListColumn(label='Directed To', width='large'),
+                                'display':None,
+                                'url':None},
+                    use_container_width=True,
+                    height=800)
 
 def update_table(df, from_node, to_nodes):
     url = df['url'].loc[df['roadmap']== from_node].item()
@@ -259,7 +264,9 @@ def run_streamlit(graph_json_data_path,table_json_data_path):
     
     # Set Header Title
     st.title('The Technology ROadmap Network')
-      
+    # Set up Containers
+    st.session_state.graph_container = st.container()
+    st.session_state.table_container = st.container()  
     # Create Upload json button
     with st.sidebar:
         df_uploaded_json = st.file_uploader('Upload Roadmap Table File',type='json')
@@ -284,28 +291,26 @@ def run_streamlit(graph_json_data_path,table_json_data_path):
         # Code for filtering dataframe and generating network
         st.session_state.df_select = st.session_state.df_interact
         st.session_state.df_select = st.session_state.df_select.reset_index(drop=True)
-        # Create networkx graph object from pandas dataframe
-        G = nx.from_pandas_edgelist(st.session_state.df_select, 'source', 'target',create_using=nx.DiGraph())
         # Create pyvis network
-        HtmlFile = generate_pyvis_network(G,400)
+        st.session_state.HtmlFile = generate_pyvis_network()
+        
         # Add button to download network as html
         with st.sidebar:
-            st.download_button('Download Visualization As HTML',data=HtmlFile,file_name='roadmap_visualization.html')
+            st.download_button('Download Visualization As HTML',data=st.session_state.HtmlFile,file_name='roadmap_visualization.html')
     elif len(selected_nodes) == 0:
-        st.text('Please choose at least 1 Roadmap on the left menu to visualize network')    
+        with graph_container:
+            st.text('Please choose at least 1 Roadmap on the left menu to visualize network')    
     # Create network graph when user selects >= 1 item
     else:
         # Code for filtering dataframe and generating network
         st.session_state.df_select = st.session_state.df_interact.loc[st.session_state.df_interact['source'].isin(selected_nodes) | st.session_state.df_interact['target'].isin(selected_nodes)]
-        # st.session_state.df_select = st.session_state.df_select.reset_index(drop=True)
-        # Create networkx graph object from pandas dataframe
-        G = nx.from_pandas_edgelist(st.session_state.df_select, 'source', 'target',create_using=nx.DiGraph())
         # Create pyvis network
-        HtmlFile = generate_pyvis_network(G,400)
+        st.session_state.HtmlFile = generate_pyvis_network()
         # Add button to download network as html
         with st.sidebar:
-            st.download_button('Download Visualization As HTML',data=HtmlFile,file_name='roadmap_visualization.html')
+            st.download_button('Download Visualization As HTML',data=st.session_state.HtmlFile,file_name='roadmap_visualization.html')
     
+    # Select and edit roadmaps
     new_directed_to_nodes = []
     with st.sidebar:
         st.markdown("""---""")
@@ -323,6 +328,10 @@ def run_streamlit(graph_json_data_path,table_json_data_path):
             if update_table_requested:
                 st.session_state.df_table = update_table(st.session_state.df_table, select_edit_node, new_directed_to_nodes)
                 st.session_state.df_interact = update_digraph(st.session_state.df_table)
+                if select_all or len(selected_nodes) != 0:
+                    # Update pyvis network
+                    st.session_state.HtmlFile = generate_pyvis_network()
+
     
     with st.sidebar:
         # Add a button to download new table
