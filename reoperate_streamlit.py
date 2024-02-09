@@ -298,7 +298,7 @@ def run_streamlit(graph_json_data_path,table_json_data_path):
         with st.sidebar:
             st.download_button('Download Visualization As HTML',data=st.session_state.HtmlFile,file_name='roadmap_visualization.html')
     elif len(selected_nodes) == 0:
-        with graph_container:
+        with st.session_state.graph_container:
             st.text('Please choose at least 1 Roadmap on the left menu to visualize network')    
     # Create network graph when user selects >= 1 item
     else:
