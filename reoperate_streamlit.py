@@ -265,7 +265,7 @@ def run_streamlit(graph_json_data_path,table_json_data_path):
     # Set Header Title
     st.title('The Technology ROadmap Network')
     # Set up Containers
-    st.session_state.graph_container = st.container()
+    st.session_state.graph_container = st.empty()
     st.session_state.table_container = st.container()  
     # Create Upload json button
     with st.sidebar:
